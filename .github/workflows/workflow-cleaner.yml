@@ -1,0 +1,25 @@
+name: Workflow to check for long running workflows
+on:
+  workflow_dispatch:
+  # Schedule the check every 30 minutes    
+  # schedule:
+  #  - cron: '*/30 * * * *' 
+
+jobs:
+  check-running-jobs:
+    name: Job to check for long running jobs
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Call workflow cleaner
+      uses: BrainsDevOps/timeouts-action@v1
+      id: cleaner
+      with:
+        app-id: ${{secrets.GHA_WORKFLOWS_CLEANER_APP_ID}}
+        app-pk: ${{secrets.GHA_WORKFLOWS_CLEANER_PRIVATE_KEY}}
+        timeout-minutes: 1
+
+    - name: Summary
+      run: |
+        echo "# Workflow cleaner summary" >> $GITHUB_STEP_SUMMARY
+        echo "${{steps.cleaner.outputs.report}}" >> $GITHUB_STEP_SUMMARY

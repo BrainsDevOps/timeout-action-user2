@@ -1,0 +1,17 @@
+name: Timer - Test long running jobs
+on:
+  workflow_dispatch:
+    inputs:
+      timeout-seconds:
+        default: 300
+        required: false
+        description: The time the sleep step will take
+
+jobs:
+  sleep:
+    name: Sleep for a while
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Sleep for some time
+      run: sleep ${{ inputs.timeout-seconds }}
